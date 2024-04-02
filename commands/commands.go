@@ -16,13 +16,19 @@ func Commands() {
 	fmt.Scanln(&command)
 	switch command {
 	case 1:
-		crypt.Encrypt()
+		fmt.Print("Enter filename: ")
+		var filename string
+		fmt.Scanln(&filename)
+		crypt.Encrypt(filename)
 	case 2:
 		fmt.Println("Decrypt")
 		fmt.Print("Enter decryption key: ")
 		var decryptionKey string
 		fmt.Scanln(&decryptionKey)
-		crypt.Decrypt(decryptionKey)
+		fmt.Print("Enter filename: ")
+		var filename string
+		fmt.Scanln(&filename)
+		crypt.Decrypt(decryptionKey, filename)
 	case 3:
 		os.Exit(0)
 	default:

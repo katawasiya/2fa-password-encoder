@@ -11,23 +11,20 @@ import (
 )
 
 type EncryptScruct struct {
-	Secret            *secretKey.SecretKeyStruct
-	Filename          string
-	FilenameEncrypted string
+	Secret   *secretKey.SecretKeyStruct
+	Filename string
 }
 
 type DecryptScruct struct {
-	Secret            string
-	Filename          string
-	FilenameDecrypted string
+	Secret   string
+	Filename string
 }
 
-func Encrypt() (*EncryptScruct, error) {
+func Encrypt(filename string) (*EncryptScruct, error) {
 
 	s := &EncryptScruct{
-		Secret:            secretKey.InitializeSecret(),
-		Filename:          "test.csv",
-		FilenameEncrypted: "test_encrypted.csv",
+		Secret:   secretKey.InitializeSecret(),
+		Filename: "test.csv",
 	}
 
 	content, err := os.ReadFile(s.Filename)
@@ -49,7 +46,7 @@ func Encrypt() (*EncryptScruct, error) {
 	stream := cipher.NewCFBEncrypter(block, iv)
 	stream.XORKeyStream(ciphertext[aes.BlockSize:], content)
 
-	err = os.WriteFile(s.FilenameEncrypted, ciphertext, 0644)
+	err = os.WriteFile(filename, ciphertext, 0644)
 	if err != nil {
 		return nil, err
 	}
@@ -58,12 +55,11 @@ func Encrypt() (*EncryptScruct, error) {
 }
 
 // this func decrypts the file by using the secret key
-func Decrypt(decryptionKey string) (*DecryptScruct, error) {
+func Decrypt(decryptionKey string, filename string) (*DecryptScruct, error) {
 
 	s := &DecryptScruct{
-		Secret:            decryptionKey,
-		Filename:          "test_encrypted.csv",
-		FilenameDecrypted: "test_decrypted.csv",
+		Secret:   decryptionKey,
+		Filename: filename,
 	}
 
 	content, err := os.ReadFile(s.Filename)
@@ -90,7 +86,7 @@ func Decrypt(decryptionKey string) (*DecryptScruct, error) {
 	fmt.Println("Decrypted content:", string(content))
 
 	// Write out the decrypted content.
-	err = os.WriteFile(s.FilenameDecrypted, content, 0644)
+	err = os.WriteFile(filename, content, 0644)
 	if err != nil {
 		fmt.Println("Error writing file:", err)
 		return nil, err
