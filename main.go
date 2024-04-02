@@ -1,9 +1,9 @@
 package main
 
 import (
-	command "encryptor/commands"
+	"encryptor/commands"
 )
 
 func main() {
-	command.Commands()
+	commands.Commands()
 }

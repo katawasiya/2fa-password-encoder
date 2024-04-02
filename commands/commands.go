@@ -10,7 +10,7 @@ import (
 
 func Commands() {
 	if len(os.Args) < 3 {
-		fmt.Println("Usage: encryptor <file> <operation>")
+		fmt.Println("Usage: encryptor <operation> <file>")
 		os.Exit(1)
 	}
 
@@ -19,13 +19,21 @@ func Commands() {
 
 	switch operation {
 	case "encrypt":
-		crypt.Encrypt(filename)
+		_, err := crypt.Encrypt(filename)
+		if err != nil {
+			fmt.Println("Error during encryption:", err)
+			os.Exit(1)
+		}
 	case "decrypt":
 		fmt.Print("Enter decryption key: ")
 		reader := bufio.NewReader(os.Stdin)
 		decryptionKey, _ := reader.ReadString('\n')
 		decryptionKey = strings.TrimSpace(decryptionKey)
-		crypt.Decrypt(decryptionKey, filename)
+		_, err := crypt.Decrypt(decryptionKey, filename)
+		if err != nil {
+			fmt.Println("Error during decryption:", err)
+			os.Exit(1)
+		}
 	default:
 		fmt.Println("Error: Invalid operation. Please enter 'encrypt' or 'decrypt'.")
 		os.Exit(1)
