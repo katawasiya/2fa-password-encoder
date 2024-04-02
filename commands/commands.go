@@ -22,12 +22,12 @@ func Commands() {
 		crypt.Encrypt(filename)
 	case 2:
 		fmt.Println("Decrypt")
-		fmt.Print("Enter decryption key: ")
-		var decryptionKey string
-		fmt.Scanln(&decryptionKey)
 		fmt.Print("Enter filename: ")
 		var filename string
 		fmt.Scanln(&filename)
+		fmt.Print("Enter decryption key: ")
+		var decryptionKey string
+		fmt.Scanln(&decryptionKey)
 		crypt.Decrypt(decryptionKey, filename)
 	case 3:
 		os.Exit(0)

@@ -82,9 +82,6 @@ func Decrypt(decryptionKey string, filename string) (*DecryptScruct, error) {
 	// XORKeyStream can work in-place if the two arguments are the same.
 	stream.XORKeyStream(content, content)
 
-	// Print out the decrypted content.
-	fmt.Println("Decrypted content:", string(content))
-
 	// Write out the decrypted content.
 	err = os.WriteFile(filename, content, 0644)
 	if err != nil {
@@ -92,5 +89,6 @@ func Decrypt(decryptionKey string, filename string) (*DecryptScruct, error) {
 		return nil, err
 	}
 
+	fmt.Println("Decryption complete")
 	return nil, err
 }
