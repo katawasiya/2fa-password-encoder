@@ -24,7 +24,7 @@ func Encrypt(filename string) (*EncryptScruct, error) {
 
 	s := &EncryptScruct{
 		Secret:   secretKey.InitializeSecret(),
-		Filename: "test.csv",
+		Filename: filename,
 	}
 
 	content, err := os.ReadFile(s.Filename)
