@@ -1,3 +1,3 @@
-module 2fa-password-encoder
+module encryptor
 
 go 1.22.1

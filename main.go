@@ -1,7 +1,7 @@
 package main
 
 import (
-	command "2fa-password-encoder/commands"
+	command "encryptor/commands"
 )
 
 func main() {

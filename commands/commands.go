@@ -1,7 +1,7 @@
 package commands
 
 import (
-	crypt "2fa-password-encoder/pckg/crypt"
+	crypt "encryptor/pckg/crypt"
 	"fmt"
 	"os"
 )

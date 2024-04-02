@@ -1,10 +1,10 @@
 package crypt
 
 import (
-	secretKey "2fa-password-encoder/pckg/secrets"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	secretKey "encryptor/pckg/secrets"
 	"fmt"
 	"io"
 	"os"
