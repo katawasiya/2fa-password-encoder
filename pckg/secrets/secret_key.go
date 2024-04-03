@@ -1,12 +1,13 @@
 package secretKey
 
 import (
-	"encoding/base32"
 	"fmt"
+	"io"
+	"log"
 	"math/rand"
+	"net/http"
 	"os"
-
-	"github.com/mdp/qrterminal/v3"
+	"strings"
 )
 
 type SecretKeyStruct struct {
@@ -19,7 +20,7 @@ type SecretKeyInterface interface {
 	RandomSecretLength() *SecretKeyStruct
 	GenerateSecretKey() *SecretKeyStruct
 	InitializeSecret() *SecretKeyStruct
-	CreateQRCode(label, issuer string) *SecretKeyStruct
+	CreateQRCode() *SecretKeyStruct
 }
 
 func (s *SecretKeyStruct) RandomSecretLength() *SecretKeyStruct {
@@ -30,7 +31,7 @@ func (s *SecretKeyStruct) RandomSecretLength() *SecretKeyStruct {
 }
 
 func (s *SecretKeyStruct) GenerateSecretKey() string {
-	const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	const letterBytes = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567" // Base32 set
 	b := make([]byte, s.SecretLength)
 	for i := range b {
 		b[i] = letterBytes[rand.Intn(len(letterBytes))]
@@ -39,44 +40,45 @@ func (s *SecretKeyStruct) GenerateSecretKey() string {
 	return s.SecretKey
 }
 
+func (s *SecretKeyStruct) CreateQRCode() *SecretKeyStruct {
+	url := "https://otp-authenticator.p.rapidapi.com/qr2/?data=otpauth%3A%2F%2Ftotp%2FHomeCorp%3AUser1%3Fsecret%3D7UPL3UKHTKUHYY2O%26issuer%3DHomeCorp&size=5&level=S"
+	payload := strings.NewReader("{}")
+
+	req, _ := http.NewRequest("POST", url, payload)
+
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("X-RapidAPI-Key", "5fa16887e7msh10ce850bbebe7a7p10ecf5jsnbacaae827963")
+	req.Header.Add("X-RapidAPI-Host", "otp-authenticator.p.rapidapi.com")
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Fatalf("Failed to send request: %v", err)
+	}
+
+	defer res.Body.Close()
+
+	// Create a new file in the current directory
+	file, err := os.Create("qrcode.png")
+	if err != nil {
+		log.Fatalf("Failed to create file: %v", err)
+	}
+	defer file.Close()
+
+	// Copy the response body to the file
+	_, err = io.Copy(file, res.Body)
+	if err != nil {
+		log.Fatalf("Failed to copy response body to file: %v", err)
+	}
+
+	fmt.Println("Secret key:", s.SecretKey)
+	fmt.Println("QR code saved to qrcode.png")
+	return s
+}
+
 func InitializeSecret() *SecretKeyStruct {
 	s := &SecretKeyStruct{}
 	s.RandomSecretLength()
 	s.GenerateSecretKey()
-	s.CreateQRCode("encrypt", "katawasiya")
+	s.CreateQRCode()
 	return s
-}
-
-// type TwoFactorInterface interface {
-// 	GetQRCode() string
-// }
-
-func (s *SecretKeyStruct) CreateQRCode(label, issuer string) (*SecretKeyStruct, error) {
-	// Создаем URI для Google Authenticator
-	secret := s.SecretKey
-	fmt.Println("Original Secret:", secret)
-
-	// Преобразуем секретный ключ в base32
-	ConvertToBase32 := func(s string) string {
-		b := []byte(s)
-		base32Secret := base32.StdEncoding.EncodeToString(b)
-		return base32Secret
-	}
-
-	base32Secret := ConvertToBase32(secret)
-	fmt.Println("Secret in base32:", base32Secret)
-
-	uri := fmt.Sprintf("otpauth://totp/%s?secret=%s&issuer=%s", label, base32Secret, issuer)
-
-	// Выводим QR-код в терминал
-	config := qrterminal.Config{
-		Level:     qrterminal.M,
-		Writer:    os.Stdout,
-		BlackChar: qrterminal.BLACK,
-		WhiteChar: qrterminal.WHITE,
-		QuietZone: 1,
-	}
-	qrterminal.GenerateWithConfig(uri, config)
-
-	return s, nil
 }
