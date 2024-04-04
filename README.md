@@ -11,7 +11,7 @@ HideYourStuff will allow you to securely encrypt the file.
 4. Do `export RAPIDAPI_KEY="<your key>` in your terminal
       
 ## Usage 
-1. `hideyourstuff encrypt <filename>`
+`hideyourstuff encrypt <filename>`
 
 ### Using the Binary
 
