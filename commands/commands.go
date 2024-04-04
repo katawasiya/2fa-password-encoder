@@ -2,8 +2,8 @@ package commands
 
 import (
 	"bufio"
-	crypt "encryptor/pckg/crypt"
 	"fmt"
+	crypt "hideyourstaff/pckg/crypt"
 	"os"
 	"strings"
 )

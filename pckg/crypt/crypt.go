@@ -4,8 +4,8 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	secretKey "encryptor/pckg/secrets"
 	"fmt"
+	secretKey "hideyourstaff/pckg/secrets"
 	"io"
 	"os"
 
