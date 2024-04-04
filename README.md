@@ -1,22 +1,23 @@
-# File Encryptor
+# HideYourStaff
 
 This project is a tool for encrypting and decrypting files with using Google Authenticator and Secret, written in Go.
 HideYourStuff will allow you to securely encrypt the file.
 
-## Usage 
+## Prerequisites
 
 1. Open in browser `https://rapidapi.com/chdan/api/otp-authenticator`
-2. Sign in using github/gmail
+2. Sign in using by github or gmail
 3. Copy your X-RapidAPI-Key
-4. In terminal do: `export RAPIDAPI_KEY="<your key>`
-5. In terminal do: `hideyourstuff <encrypt/decrypt> <filename>`
-6. Save your secret 
-7. Scan your QR Code with Google Authenticator
+4. Do `export RAPIDAPI_KEY="<your key>` in your terminal
+      
+## Usage 
+1. `hideyourstuff encrypt <filename>`
 
 ### Using the Binary
 
 1. Download the latest release.
 2. Run the application.
+3. Do `sudo mv hideyourstaff in your PATH` in your terminal
 
 ### Building from Source
 
