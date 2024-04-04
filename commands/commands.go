@@ -2,8 +2,8 @@ package commands
 
 import (
 	"bufio"
-	crypt "encryptor/pckg/crypt"
 	"fmt"
+	crypt "hideyourstaff/pckg/crypt"
 	"os"
 	"strings"
 )
@@ -29,7 +29,11 @@ func Commands() {
 		reader := bufio.NewReader(os.Stdin)
 		decryptionKey, _ := reader.ReadString('\n')
 		decryptionKey = strings.TrimSpace(decryptionKey)
-		_, err := crypt.Decrypt(decryptionKey, filename)
+		fmt.Print("Enter otp key: ")
+		readerOTP := bufio.NewReader(os.Stdin)
+		otpCode, _ := readerOTP.ReadString('\n')
+		otpCode = strings.TrimSpace(otpCode)
+		_, err := crypt.Decrypt(decryptionKey, filename, otpCode)
 		if err != nil {
 			fmt.Println("Error during decryption:", err)
 			os.Exit(1)

@@ -4,10 +4,12 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	secretKey "encryptor/pckg/secrets"
 	"fmt"
+	secretKey "hideyourstaff/pckg/secrets"
 	"io"
 	"os"
+
+	"github.com/pquerna/otp/totp"
 )
 
 type EncryptScruct struct {
@@ -20,6 +22,7 @@ type DecryptScruct struct {
 	Filename string
 }
 
+// this func encrypts the file by using the secret key
 func Encrypt(filename string) (*EncryptScruct, error) {
 
 	s := &EncryptScruct{
@@ -54,12 +57,18 @@ func Encrypt(filename string) (*EncryptScruct, error) {
 	return s, nil
 }
 
-// this func decrypts the file by using the secret key
-func Decrypt(decryptionKey string, filename string) (*DecryptScruct, error) {
+// this func decrypts the file by using the secret key and the otp code
+func Decrypt(decryptionKey string, filename string, otpCode string) (*DecryptScruct, error) {
 
 	s := &DecryptScruct{
 		Secret:   decryptionKey,
 		Filename: filename,
+	}
+
+	valid := totp.Validate(otpCode, s.Secret)
+	if !valid {
+		fmt.Println("Invalid OTP code")
+		return nil, fmt.Errorf("invalid OTP code")
 	}
 
 	content, err := os.ReadFile(s.Filename)

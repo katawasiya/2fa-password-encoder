@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encryptor/commands"
+	"hideyourstaff/commands"
 )
 
 func main() {
