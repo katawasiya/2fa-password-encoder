@@ -43,8 +43,9 @@ func (s *SecretKeyStruct) GenerateSecretKey() *SecretKeyStruct {
 }
 
 // This function creates a QR code
-func (s *SecretKeyStruct) CreateQRCode() *SecretKeyStruct {
-	url := "https://otp-authenticator.p.rapidapi.com/qr2/?data=otpauth%3A%2F%2Ftotp%2FHomeCorp%3AUser1%3Fsecret%3D" + s.SecretKey + "%26issuer%3DHomeCorp&size=5&level=M"
+func (s *SecretKeyStruct) CreateQRCode(filename string) *SecretKeyStruct {
+
+	url := "https://otp-authenticator.p.rapidapi.com/qr2/?data=otpauth%3A%2F%2Ftotp%2FHomeCorp%3A" + filename + "%3Fsecret%3D" + s.SecretKey + "%26issuer%3DHideYourStuff&size=5&level=M"
 
 	payload := strings.NewReader("{}")
 	apiKey := os.Getenv("RAPIDAPI_KEY")
@@ -83,6 +84,6 @@ func (s *SecretKeyStruct) CreateQRCode() *SecretKeyStruct {
 func InitializeSecret() *SecretKeyStruct {
 	s := &SecretKeyStruct{}
 	s.GenerateSecretKey()
-	s.CreateQRCode()
+	s.CreateQRCode(os.Args[2])
 	return s
 }
